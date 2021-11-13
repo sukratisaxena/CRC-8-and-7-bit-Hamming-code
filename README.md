@@ -1,0 +1,1 @@
+# CRC-8-and-7-bit-Hamming-code
