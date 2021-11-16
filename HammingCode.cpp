@@ -1,8 +1,9 @@
 #include<iostream>
 #include<string>
-#include<bits/stdc++.h>
 #include<conio.h>
 #include<ctime>
+#include<algorithm>
+#include<graphics.h>
 using namespace std;
 
 string data;
@@ -21,29 +22,29 @@ void tocodeword(string data)
 	codedData.append(string(1,('0'+p1)));
 }
 
-void correctcode(string data)
+void correctcode(string cdata)
 {
 
-	int p1 =(((data[6] + data[4] + data[2] + data[0]) - (4 * '0'))%2);
-	int p2 =(((data[5] + data[4] + data[1] + data[0]) - (4 * '0'))%2);
-	int p4 =(((data[3] + data[2] + data[1] + data[0]) - (4 * '0'))%2);
+	int p1 =(((cdata[6] + cdata[4] + cdata[2] + cdata[0]) - (4 * '0'))%2);
+	int p2 =(((cdata[5] + cdata[4] + cdata[1] + cdata[0]) - (4 * '0'))%2);
+	int p4 =(((cdata[3] + cdata[2] + cdata[1] + cdata[0]) - (4 * '0'))%2);
 
 	if(p1+p2+p4 == 0)
     {
 		cout << "No Error in the token." << endl;
 		return;
 	}
-	cout << "Token with error: " << data << endl;
+	cout << "Token with error: " << cdata << endl;
 	cout << "   Faulty Index in token: ";
-	reverse(data.begin(),data.end());
+	reverse(cdata.begin(),cdata.end());
 
 	int f = p1*1 + p2*2 + p4*4 - 1;
 
 	cout << f+1;
 
-	data[f] == '1' ? data[f] = '0':data[f] = '1';
-	reverse(data.begin(),data.end());
-	cout << endl << "   Corrected Token: " << data <<endl << endl;
+	cdata[f] == '1' ? cdata[f] = '0':cdata[f] = '1';
+	reverse(cdata.begin(),cdata.end());
+	cout << endl << "   Corrected Token: " << cdata <<endl << endl;
 }
 int main()
 {
@@ -72,6 +73,7 @@ int main()
 		a += 4;
 		cnt++;
 	}
+
 	cout <<"The Final Generated Codeword is :"<< codedData << endl <<endl;
 
 	float p = ((float)rand()/(RAND_MAX));
@@ -126,16 +128,56 @@ int main()
 
     cout << endl << endl << "Tokenwise Code Correction: " << endl << endl;
 	a = 0,cnt = 1;
+	string correctcode;
+	next:
 	while(a < codedData.length())
 	{
         cout << cnt << ". ";
-        correctcode(codedData.substr(a,7));
+        string cdata = codedData.substr(a,7);
+        int p1 =(((cdata[6] + cdata[4] + cdata[2] + cdata[0]) - (4 * '0'))%2);
+        int p2 =(((cdata[5] + cdata[4] + cdata[1] + cdata[0]) - (4 * '0'))%2);
+        int p4 =(((cdata[3] + cdata[2] + cdata[1] + cdata[0]) - (4 * '0'))%2);
+
+        if(p1+p2+p4 == 0)
+        {
+            cout << "No Error in the token." << endl;
+        }
+        else
+        {
+        cout << "Token with error: " << cdata << endl;
+        cout << "   Faulty Index in token: ";
+        reverse(cdata.begin(),cdata.end());
+
+        int f = p1*1 + p2*2 + p4*4 - 1;
+
+        cout << f+1;
+
+        cdata[f] == '1' ? cdata[f] = '0':cdata[f] = '1';
+        reverse(cdata.begin(),cdata.end());
+        cout << endl << "   Corrected Token: " << cdata <<endl << endl;
+        }
+		a = a + 7;
+		cnt++;
+		correctcode.append(cdata);
+	}
+	cout << endl << "The final Corrected Codeword is: " << correctcode << endl << endl;
+
+    string corrcode = "";
+    a = 0,cnt = 1;
+    while(a < correctcode.length())
+	{
+        corrcode.push_back(correctcode[a]);
+        corrcode.push_back(correctcode[a+1]);
+        corrcode.push_back(correctcode[a+2]);
+        corrcode.push_back(correctcode[a+4]);
 		a = a + 7;
 		cnt++;
 	}
-	cout << endl << "The final Corrected Codeword is: " << codedData << endl << endl;
+
+	cout << "The extracted dataword is: " << corrcode << endl;
 
 	cout << "Do you want to feed Another dataword?(y/n)";
+
 	char ch;
 	cin >> ch;
 	if(ch == 'y' || ch == 'Y')
