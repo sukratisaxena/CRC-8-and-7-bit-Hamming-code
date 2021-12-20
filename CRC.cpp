@@ -125,17 +125,28 @@ int main()
     cout << "Divisor for CRC-8 is: "<< div << endl;
     n2 = div.length();
 
-    int hops;
-    cout << "Enter the number of hops in binary symmetric channel :  ";
+    int hops=0,prob1=0,prob2=0;
+    cout << "Enter the number of hops in binary symmetric channel(1 or 2):  ";
     cin >> hops;
-    Prob:
-    float prob;
-    cout << "Enter the crossover probability(p): ";
-    cin >> prob;
-    if(prob > 1)
+
+    Prob1:
+    cout << "Enter the crossover probability(p1): ";
+    cin >> prob1;
+    if(prob1 > 1)
     {
         cout << "Error! Enter a number between 1 and 0" << endl;
-        goto Prob;
+        goto Prob1;
+    }
+     if(hops==2)
+     {
+        Prob2:
+    cout << "Enter the crossover probability(p2): ";
+    cin >> prob2;
+    if(prob2 > 1)
+    {
+        cout << "Error! Enter a number between 1 and 0" << endl;
+        goto Prob2;
+    }
     }
 
     float token=16.0,blocks=n1/token;
@@ -177,17 +188,26 @@ int main()
     }
     for(int i=0;i<hops;i++)
     {
+        if(i==0)
+        {
+           for(int i=0;i<=floor(blocks);i++)
+            {
+                errarr[i]=error(errarr[i],prob1);
+            }
+        }
+        else{
         for(int i=0;i<=floor(blocks);i++)
         {
-            errarr[i]=error(errarr[i],prob);
+            errarr[i]=error(errarr[i],prob2);
+        }
         }
     }
     int errno;
     cout << endl;
     for(int i=0;i<=floor(blocks);i++)
     {
-        cout<< i+1 <<". Code Word sent     "<<i <<" is " <<codearr[i]<<endl;
-        cout <<"   Code Word recieved "<<i <<" is "<<errarr[i]<<endl;
+        cout<< i+1 <<". Code Word sent is " <<codearr[i]<<endl;
+        cout <<"   Code Word recieved is "<<errarr[i]<<endl;
         errno+=decode(errarr[i],div);
         cout<<endl;
     }
@@ -250,7 +270,7 @@ int main()
             }
         }
     }
-    cout<<endl;
+    cout << endl << endl;
 }
     cout << "Do you want to feed Another dataword?(y/n)";
     char ch;
@@ -260,5 +280,3 @@ int main()
     else
     return 0;
 }
-
-
